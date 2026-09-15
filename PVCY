@@ -1,0 +1,159 @@
+import { useState } from 'react';
+import {
+  BadgeCheck,
+  Bookmark,
+  Camera,
+  ChevronDown,
+  Globe2,
+  Heart,
+  Image as ImageIcon,
+  LockKeyhole,
+  MessageCircle,
+  MoreVertical,
+  PlaySquare,
+  ScanLine,
+  Sparkles,
+  Wallet,
+} from 'lucide-react';
+
+const creatorPhoto = '/2.PNG';
+const pixCode = '00020101021226940014br.gov.bcb.pix2572qrcode.hyperwalletip.com.br/dynamic/02e7c661-b346-4035-90e0-55485fdd7e285204000053039865802BR5907IA LTDA6009Sao Paulo62070503***63043A5A';
+
+function App() {
+  const [activeTab, setActiveTab] = useState<'posts' | 'media'>('posts');
+  const [languageOpen, setLanguageOpen] = useState(false);
+  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const copyPixCode = async () => {
+    await navigator.clipboard.writeText(pixCode);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 2200);
+  };
+
+  return (
+    <div className="app-shell">
+      <header className="topbar">
+        <div className="wordmark" aria-label="privacy">
+          privacy<span>.</span>
+        </div>
+        <div className="language-wrap">
+          <button
+            className="language-button"
+            onClick={() => setLanguageOpen((open) => !open)}
+            aria-label="Selecionar idioma"
+          >
+            <Globe2 size={21} strokeWidth={1.8} />
+          </button>
+          {languageOpen && (
+            <div className="language-menu">
+              <button>Português</button>
+              <button>English</button>
+            </div>
+          )}
+        </div>
+      </header>
+
+      <main className="page-content">
+        <section className="profile-card">
+          <div className="cover-image" />
+          <div className="profile-body">
+            <div className="profile-avatar-wrap">
+              <img className="profile-avatar" src={creatorPhoto} alt="Eliane da Luz" />
+            </div>
+            <div className="profile-stats">
+              <span><ImageIcon size={15} /> 630</span>
+              <span><PlaySquare size={15} /> 83</span>
+              <span><LockKeyhole size={15} /> 12</span>
+              <span><Heart size={15} /> 11.4K</span>
+            </div>
+            <div className="profile-name-row">
+              <h1>Eliane da Luz</h1>
+              <BadgeCheck className="verified" size={18} fill="white" />
+            </div>
+            <p className="handle">@elianedaluz</p>
+            <p className="bio-text">vem me ver molhadinha do melhor jeitinho amorr</p>
+            <p className="subscription-label">Assinaturas</p>
+            <button className="subscribe-button" onClick={() => setPaymentOpen(true)}>
+              R$19,00 <span>(PROMOÇÃO)</span>
+            </button>
+          </div>
+        </section>
+
+        <nav className="content-tabs" aria-label="Conteúdo do perfil">
+          <button className={activeTab === 'posts' ? 'active' : ''} onClick={() => setActiveTab('posts')}>
+            <ScanLine size={18} /> 733 Postagens
+          </button>
+          <button className={activeTab === 'media' ? 'active' : ''} onClick={() => setActiveTab('media')}>
+            <PlaySquare size={19} /> 713 Mídias
+          </button>
+        </nav>
+
+        <article className="feed-card">
+          <div className="post-header">
+            <div className="post-author-list">
+              <div className="author-line">
+                <img src={creatorPhoto} alt="" className="mini-avatar" />
+                <span>Eliane da Luz</span>
+                <BadgeCheck className="verified" size={16} fill="white" />
+              </div>
+              <div className="author-line secondary-author">
+                <img src={creatorPhoto} alt="" className="mini-avatar large" />
+                <div>
+                  <div className="author-name">Eliane da Luz <BadgeCheck className="verified" size={16} fill="white" /></div>
+                  <div className="author-handle">@elianedaluz</div>
+                </div>
+              </div>
+            </div>
+            <div className="post-brand">privacy<span>.</span></div>
+            <MoreVertical className="more-icon" size={20} />
+          </div>
+
+          <div className={`locked-content ${activeTab === 'media' ? 'media-view' : ''}`}>
+            {activeTab === 'media' ? <Sparkles size={27} className="media-symbol" /> : <LockKeyhole size={45} strokeWidth={1.5} className="lock-icon" />}
+            <div className="locked-stats">
+              <span><ImageIcon size={15} /> 630</span>
+              <span><PlaySquare size={15} /> 83</span>
+              <span><Heart size={16} /> 11.4K</span>
+            </div>
+          </div>
+
+          <div className="post-actions">
+            <div className="action-group">
+              <Heart size={23} strokeWidth={1.4} />
+              <MessageCircle size={23} strokeWidth={1.4} />
+              <Wallet size={23} strokeWidth={1.4} />
+            </div>
+            <Bookmark size={23} strokeWidth={1.4} />
+          </div>
+          <div className="post-prompt">
+            <span><LockKeyhole size={14} /> Conteúdo exclusivo para assinantes</span>
+            <ChevronDown size={16} />
+          </div>
+        </article>
+
+        <div className="bottom-note"><Camera size={15} /> Conteúdo protegido por Privacy</div>
+      </main>
+
+      {paymentOpen && (
+        <div className="modal-backdrop" role="presentation" onClick={() => setPaymentOpen(false)}>
+          <section className="payment-modal" role="dialog" aria-modal="true" aria-labelledby="payment-title" onClick={(event) => event.stopPropagation()}>
+            <button className="modal-close" aria-label="Fechar pagamento" onClick={() => setPaymentOpen(false)}>×</button>
+            <div className="payment-kicker">ASSINATURA VIP</div>
+            <h2 id="payment-title">Pague via Pix</h2>
+            <p className="payment-description">Escaneie o QR Code pelo aplicativo do seu banco para liberar sua assinatura.</p>
+            <div className="qr-frame"><img src="/QR.PNG" alt="QR Code para pagamento Pix" /></div>
+            <div className="payment-price">R$19,00 <span>promoção</span></div>
+            <div className="pix-copy-box">
+              <p>{pixCode}</p>
+              <button onClick={copyPixCode}>{copied ? 'Código copiado' : 'Copiar código Pix'}</button>
+            </div>
+            <p className="payment-hint">Após o pagamento, envie o comprovante para confirmar sua assinatura.</p>
+          </section>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default App;
